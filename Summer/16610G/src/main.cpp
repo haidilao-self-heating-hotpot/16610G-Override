@@ -1,66 +1,97 @@
-#include "globals.hpp"          //contains motor definitions, other libraries, and global variables new
-#include "AutonSelector.hpp"    // contains how to select a specific path
-#include "Autonomous_Paths.hpp" // Contains the different autonomous paths
-#include "movements.cpp" // Contains all movements
- 
-// creates autonSelector object
-AutonSelector autonSelector;
+#include "includes.hpp"
+#include "autonomous_selector.hpp"
 
-void on_center_button() {
+using namespace pros;
 
-}
+/// Callback for center button press (currently unused)
+void on_center_button() {}
 
-void initialize() {
-    pros::lcd::initialize();
-    pros::screen::erase();
-    pros::delay(1000);
-    /*
-    Sets up the autons and passes in the all the routes as a vector (similar to an array)
-    Each autonomousRoute contains the team color, name, description, and the acutal path
-    */
+/// Robot initialization
+/// Sets up chassis calibration, LCD, motors, and starts the periodic task
+void initialize()
+{
+    // autonSelect.start();
+    chassis.calibrate(); // Calibrate IMU and odometry
 
-    autonSelector.setAutons(std::vector<autonomousRoute>{
-        // autonomousRoute{"color", "name", "description", path from Autonomous_Paths.hpp},
+    autonSelect.setAutons(std::vector<autonomousRoute>{
+        autonomousRoute{"red", "2 Toggles", "a", toggles},
     });
-    autonSelector.setSkillsAuton(autonomousRoute{"red", "Skills", "Skills Auton", autonomous});
+    autonSelect.setSkillsAuton(autonomousRoute{"red", "Skills", "Skills Auton", skills});
+    autonSelect.start(); // Start autonomous selector task
 
-    // Starts the auton selector screen (NOT the actual auton yet)
-    autonSelector.start();
-
-    // Put standard initialization code below here
-    // chassis.calibrate();
-    imu.reset();
-    pros::delay(1000);
-    
-    // Code to set how bright the light of the color sensor is
-    // color_sensor.set_led_pwm(100);
-}
-
-void disabled() {
+    rightdrive.set_brake_mode_all(coast);
+    leftdrive.set_brake_mode_all(coast);
+    lift.set_brake_mode_all(hold);
 
 }
 
-void competition_initialize() {
+/// Called when robot is disabled
+void disabled() {}
 
+/// Pre-competition initialization
+void competition_initialize() {}
+
+/// Autonomous routine - runs selected autonomous strategy
+void autonomous()
+{
+    autonSelect.runAuton();  // Use autonomous selector
+    // chassis.setPose(0, 0, 0);
+    // chassis.moveToPoint(0, 24, 10000);
+    // right();  // Alternative right side routine
+    // soloAWP();  // Run solo AWP (Autonomous Win Point) strategy
+    // right2();  // Alternative strategy
+    // skills(); // Run skills routine
 }
 
-void autonomous() {
-    teamColor = autonSelector.isRedTeam() ? "red" : "blue";
-
-    // Code to run during the autonomous period
-    autonSelector.runAuton();
-}
-
-void systems_check() {
-    
-}
-
+/// Main driver control loop
 void opcontrol()
 {
-    uint32_t macroTimer = 0;
+    while (true) {
 
-    while (true)
-    {   
-        pros::delay(50);
+        // Drivetrain
+        int forward = LEFT_Y;
+        int turning = RIGHT_X;
+        chassis.arcade(forward, turning, 0.75);
+
+        // Cascade Lift
+        if (R2_HELD) 
+        {
+            lift.move(127);
+        } 
+        else if (R1_HELD) 
+        {
+            lift.move(-127);
+        } 
+        else 
+        {
+            lift.move(0);
+        }
+
+        // Intake
+        if (L2_HELD) 
+        {
+            intake.move(127);
+        } 
+        else if (L1_HELD) 
+        {
+            intake.move(-127);
+        }
+        else 
+        {
+            intake.move(0);
+        }
+
+        // Claw
+        if (DOWN_NEW_PRESS) 
+        {
+            clawclamp.toggle();
+        }
+
+        if (B_NEW_PRESS) 
+        {
+            clawswing.toggle();
+        }
+
+        pros::delay(10);
     }
 }
