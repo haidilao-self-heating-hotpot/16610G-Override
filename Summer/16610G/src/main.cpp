@@ -23,6 +23,7 @@ void initialize()
     leftdrive.set_brake_mode_all(coast);
     lift.set_brake_mode_all(hold);
 
+    pros::Task liftTask(liftTaskFn, nullptr, "Lift");
 }
 
 /// Called when robot is disabled
@@ -93,5 +94,8 @@ void opcontrol()
         }
 
         pros::delay(10);
+
+        //testing
+        if (X_NEW_PRESS) {master.print(0, 0, "Height: %.2f", currentHeight());}
     }
 }

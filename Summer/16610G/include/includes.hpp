@@ -5,6 +5,8 @@
 #include "autonomous_paths.hpp"
 #include "autonomous_selector.hpp"
 #include "defines.hpp"
+#include "pinlevels.hpp"
+#include "movements.hpp"
 #include <string>
 #include <stdlib.h>
 #include <iostream>
