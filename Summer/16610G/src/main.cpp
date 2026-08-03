@@ -23,7 +23,7 @@ void initialize()
     leftdrive.set_brake_mode_all(coast);
     lift.set_brake_mode_all(hold);
 
-    pros::Task liftTask(liftTaskFn, nullptr, "Lift");
+    // pros::Task liftTask(liftTaskFn, nullptr, "Lift");
 }
 
 /// Called when robot is disabled
