@@ -1,8 +1,8 @@
 # if "template" is in the make command, do not include static.lib files
 ifneq (,$(findstring template,$(MAKECMDGOALS)))
-ASSET_FILES=$(wildcard static/*)
+ASSET_FILES=$(filter-out static/example.txt,$(wildcard static/*))
 else
-ASSET_FILES=$(wildcard static/*) $(wildcard static.lib/*)
+ASSET_FILES=$(filter-out static/example.txt,$(wildcard static/*)) $(wildcard static.lib/*)
 endif
 
 TEMPLATE_FILES+=$(wildcard static/*) $(wildcard firmware/hot-cold-asset.mk)

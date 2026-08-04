@@ -15,14 +15,14 @@ void initialize()
 
     autonSelect.setAutons(std::vector<autonomousRoute>{
         autonomousRoute{"red", "2 Toggles", "a", toggles},
-    });
+        autonomousRoute{"red", "LeftAutonOnePin", "LEFT Auton One Pin", leftAuton},
+        autonomousRoute{"red", "RightAutonOnePin", "RIGHT Auton One Pin", rightAuton}});
     autonSelect.setSkillsAuton(autonomousRoute{"red", "Skills", "Skills Auton", skills});
     autonSelect.start(); // Start autonomous selector task
 
     rightdrive.set_brake_mode_all(coast);
     leftdrive.set_brake_mode_all(coast);
     lift.set_brake_mode_all(hold);
-
 }
 
 /// Called when robot is disabled
@@ -34,7 +34,7 @@ void competition_initialize() {}
 /// Autonomous routine - runs selected autonomous strategy
 void autonomous()
 {
-    autonSelect.runAuton();  // Use autonomous selector
+    autonSelect.runAuton(); // Use autonomous selector
     // chassis.setPose(0, 0, 0);
     // chassis.moveToPoint(0, 24, 10000);
     // right();  // Alternative right side routine
@@ -46,7 +46,11 @@ void autonomous()
 /// Main driver control loop
 void opcontrol()
 {
-    while (true) {
+    // for vibrate after 1 minute 30 seconds
+    int timer = 0;
+    bool clawClampState = false;
+    while (true)
+    {
 
         // Drivetrain
         int forward = LEFT_Y;
@@ -54,44 +58,62 @@ void opcontrol()
         chassis.arcade(forward, turning, 0.75);
 
         // Cascade Lift
-        if (R2_HELD) 
+        if (R1_HELD)
         {
             lift.move(127);
-        } 
-        else if (R1_HELD) 
+        }
+        else if (R2_HELD)
         {
             lift.move(-127);
-        } 
-        else 
+        }
+        else
         {
             lift.move(0);
         }
 
         // Intake
-        if (L2_HELD) 
+        if (L1_HELD)
         {
             intake.move(127);
-        } 
-        else if (L1_HELD) 
+        }
+        else if (LEFT_HELD)
+        {
+            intake.move(40);
+        }
+        else if (L2_HELD)
         {
             intake.move(-127);
         }
-        else 
+        else
         {
             intake.move(0);
         }
 
-        // Claw
-        if (DOWN_NEW_PRESS) 
+        // Claw, down is open b is closed yay
+        if (DOWN_NEW_PRESS && !clawClampState)
         {
-            clawclamp.toggle();
+            clawclamp.set_value(true);
+            clawClampState = true;
         }
 
-        if (B_NEW_PRESS) 
+        if (B_NEW_PRESS && clawClampState)
+        {
+            clawclamp.set_value(false);
+            clawClampState = false;
+        }
+
+        if (A_NEW_PRESS)
         {
             clawswing.toggle();
         }
 
+        timer += 1;
+        if (timer == 9000) // 1 minute 30 seconds at 10ms intervals
+        {
+            // Vibrate the controller
+            timer = 0;
+            master.rumble("_");
+        }
         pros::delay(10);
     }
 }
