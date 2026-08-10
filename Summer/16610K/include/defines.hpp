@@ -12,10 +12,10 @@ using namespace pros;
 // Ports ----------------------------------------------------------------
 #define leftintakeport 20
 #define rightintakeport -6
-#define leftdrive1port -4
-#define leftdrive2port -5
-#define rightdrive1port 2 
-#define rightdrive2port 3
+#define leftdrive1port 4
+#define leftdrive2port 5
+#define rightdrive1port -2 
+#define rightdrive2port -3
 #define lift1port 9
 #define lift2port 10
 

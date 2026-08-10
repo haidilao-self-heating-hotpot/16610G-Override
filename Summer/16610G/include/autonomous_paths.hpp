@@ -3,10 +3,9 @@
 
 #include "sensor_loc.hpp"
 
-void leftAuton();
 void moveTo(double x, double y, int t1, int t2, bool b1, bool b2);
 
-void primary();
+void leftAuton();
 
 void rightAuton();
 

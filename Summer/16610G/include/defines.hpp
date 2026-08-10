@@ -20,16 +20,18 @@ using namespace pros;
 #define lift1port -3
 #define lift2port 7
 
-#define imuport 17
+#define imuport 12
 #define verticalport 11
 // #define horizontalport 12
 
 #define winchrotationport 20 //subject to change
-#define frontport 13
+#define frontport 16
 #define rightport 14
 #define backport 15
-#define leftport 16
+#define leftport 13
 
+// #define pistonport 'A'
+#define matchloaderpistonport 'H'
 
 // AutonSelector -----------------------------------------------------------------------------
 
@@ -59,7 +61,9 @@ inline MotorGroup lift(
 
 inline Motor leftintake(leftintakeport, MotorGears::green);
 inline Motor rightintake(rightintakeport, MotorGears::green);
-inline MotorGroup intake({leftintakeport, rightintakeport}, MotorGears::green);
+inline MotorGroup intake(
+    {leftintakeport, rightintakeport}
+);
 
 
 // Pneumatics Definitions --------------------------------------------------------------------
@@ -68,6 +72,8 @@ inline MotorGroup intake({leftintakeport, rightintakeport}, MotorGears::green);
 // inline pros::adi::Pneumatics clawswing(clawswingport, false);
 inline pros::adi::Pneumatics clawswing({20, 'A'}, false);
 inline pros::adi::Pneumatics clawclamp({20, 'B'}, false);
+inline pros::adi::Pneumatics matchloaderpiston('H', false);
+
 
 
 // Sensor Definitions ------------------------------------------------------------------------

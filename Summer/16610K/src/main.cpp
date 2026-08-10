@@ -53,9 +53,9 @@ void opcontrol()
     while (true) {
 
         // Drivetrain
-        int forward = LEFT_Y;
-        int turning = RIGHT_X;
-        chassis.arcade(forward, turning, 0.75);
+        int forward = -LEFT_Y;
+        int turning = -RIGHT_X;
+        chassis.arcade(forward, turning, false, 1.2);
 
         // Cascade Lift
         if (R1_HELD) 
