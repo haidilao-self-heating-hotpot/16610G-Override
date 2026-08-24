@@ -19,12 +19,14 @@ using namespace pros;
 #define rightdrive2port 10
 #define lift1port -3
 #define lift2port 7
+#define armmotorport 22 //stc
 
 #define imuport 12
 #define verticalport 11
 // #define horizontalport 12
 
 #define winchrotationport 20 //subject to change
+#define armrotationport 21 //stc
 #define frontport 16
 #define rightport 14
 #define backport 15
@@ -65,6 +67,8 @@ inline MotorGroup intake(
     {leftintakeport, rightintakeport}
 );
 
+inline Motor armmotor(armmotorport, MotorGears::green); //stc
+
 
 // Pneumatics Definitions --------------------------------------------------------------------
 
@@ -82,6 +86,7 @@ inline Imu imu(imuport);
 inline Rotation vertical(verticalport); inline lemlib::TrackingWheel verticalwheel(&vertical, lemlib::Omniwheel::NEW_2, 0);
 // inline Rotation horizontal(horizontalport); inline lemlib::TrackingWheel horizontalwheel(&horizontal, lemlib::Omniwheel::NEW_2, 0);
 inline Rotation winchrotation(winchrotationport);
+inline Rotation armrotation(armrotationport);
 
 inline Distance frontdist(frontport); inline dist_sensor front(&frontdist, lemlib::Pose(0, 1, 0));
 inline Distance rightdist(rightport); inline dist_sensor right(&rightdist, lemlib::Pose(1, 0, 90));

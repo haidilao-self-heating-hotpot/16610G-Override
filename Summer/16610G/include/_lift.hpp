@@ -1,5 +1,5 @@
-#ifndef LEVEL_HPP
-#define LEVEL_HPP
+#ifndef LIFT_HPP
+#define LIFT_HPP
 
 extern double baseheight;
 extern double basewinchdiameter;
