@@ -8,28 +8,31 @@
 #include "piston.hpp"
 using namespace pros;
 
-  
 // Ports ----------------------------------------------------------------
-#define leftintakeport 20
+#define leftintakeport 5
 #define rightintakeport -6
-#define leftdrive1port 4
-#define leftdrive2port 5
-#define rightdrive1port -2 
-#define rightdrive2port -3
-#define lift1port 9
-#define lift2port 10
+// #define leftdrivehalfport 1
+#define leftdrive1port 10
+#define leftdrive2port 9
+// #define rightdrivehalfport 11
+#define rightdrive1port 19
+#define rightdrive2port 20
+#define lift1port -16
+#define lift2port 7
+#define armmotorport 22 //stc
 
-#define imuport 17
+#define imuport 12
 #define verticalport 11
 // #define horizontalport 12
-#define frontport 13
+
+#define winchrotationport 20 //subject to change
+#define frontport 16
 #define rightport 14
 #define backport 15
-#define leftport 16
+#define leftport 13
 
-
-// #define clawclampport 'A'
-// #define clawswingport 'B'
+// #define pistonport 'A'
+#define matchloaderpistonport 'H'
 
 // AutonSelector -----------------------------------------------------------------------------
 
@@ -37,16 +40,18 @@ inline AutonSelector autonSelect;
 
 // Motor Definitions -------------------------------------------------------------------------
 
+// inline Motor rightdrivehalf(rightdrivehalfport, MotorGears::green);
 inline Motor rightdrive1(rightdrive1port, MotorGears::blue);
 inline Motor rightdrive2(rightdrive2port, MotorGears::blue);
 inline MotorGroup rightdrive(
-    {rightdrive1port, rightdrive2port}
+    {/* rightdrivehalfport ,*/ rightdrive1port, rightdrive2port}
 );
 
+// inline Motor leftdrivehalf(leftdrivehalfport, MotorGears::green);
 inline Motor leftdrive1(leftdrive1port, MotorGears::blue);
 inline Motor leftdrive2(leftdrive2port, MotorGears::blue);
 inline MotorGroup leftdrive(
-    {leftdrive1port, leftdrive2port}
+    {/* leftdrivehalfport ,*/ leftdrive1port, leftdrive2port}
 );
 
 inline Motor lift1(lift1port, MotorGears::blue);
@@ -57,15 +62,21 @@ inline MotorGroup lift(
 
 inline Motor leftintake(leftintakeport, MotorGears::green);
 inline Motor rightintake(rightintakeport, MotorGears::green);
-inline MotorGroup intake({leftintakeport, rightintakeport}, MotorGears::green);
+inline MotorGroup intake(
+    {leftintakeport, rightintakeport}
+);
+
+inline Motor armmotor(armmotorport, MotorGears::green); //stc 
 
 
 // Pneumatics Definitions --------------------------------------------------------------------
 
 // inline pros::adi::Pneumatics clawclamp(clawclampport, false);
 // inline pros::adi::Pneumatics clawswing(clawswingport, false);
-// inline pros::adi::Pneumatics clawswing({20, 'A'}, false);
-// inline pros::adi::Pneumatics clawclamp({20, 'B'}, false);
+inline pros::adi::Pneumatics clawswing({20, 'A'}, false);
+inline pros::adi::Pneumatics clawclamp({20, 'B'}, false);
+inline pros::adi::Pneumatics matchloaderpiston('H', false);
+
 
 
 // Sensor Definitions ------------------------------------------------------------------------
@@ -73,6 +84,7 @@ inline MotorGroup intake({leftintakeport, rightintakeport}, MotorGears::green);
 inline Imu imu(imuport);
 inline Rotation vertical(verticalport); inline lemlib::TrackingWheel verticalwheel(&vertical, lemlib::Omniwheel::NEW_2, 0);
 // inline Rotation horizontal(horizontalport); inline lemlib::TrackingWheel horizontalwheel(&horizontal, lemlib::Omniwheel::NEW_2, 0);
+inline Rotation winchrotation(winchrotationport);
 
 inline Distance frontdist(frontport); inline dist_sensor front(&frontdist, lemlib::Pose(0, 1, 0));
 inline Distance rightdist(rightport); inline dist_sensor right(&rightdist, lemlib::Pose(1, 0, 90));
@@ -84,7 +96,7 @@ inline Distance leftdist(leftport); inline dist_sensor left(&leftdist, lemlib::P
 inline lemlib::Drivetrain drivetrain(
     &leftdrive,
     &rightdrive,
-    13.5,
+    11.75,
     lemlib::Omniwheel::NEW_275,
     450,
     2
@@ -103,11 +115,11 @@ inline lemlib::ExpoDriveCurve steer_curve(
 );
 
 inline lemlib::ControllerSettings lateral_controller(
-    0,  // Increase kP for more "push" at the end                                            
+    10,  // Increase kP for more "push" at the end                                            
     0,   // Set kI to 0 unless you really need it
-    0,   // kD                                            
-    0,   // anti-windup
-    0, // Reduce error range to 0.5 inches for better accuracy                                            
+    3,   // kD                                            
+    1,   // anti-windup
+    0.5, // Reduce error range to 0.5 inches for better accuracy                                            
     100, 
     2,   // Large error range
     500, 
@@ -115,11 +127,11 @@ inline lemlib::ControllerSettings lateral_controller(
 );
 
 inline lemlib::ControllerSettings angular_controller(
-    0,  // proportional gain (kP) 2, 3
+    10,  // proportional gain (kP) 2, 3
     0,  // integral gain (kI)
-    0, // derivative gain (kD) 12.05, 20
-    0,  // anti windup (average error x 1.5)
-    0,   // small error range, in degrees
+    3, // derivative gain (kD) 12.05, 20
+    3.8,  // anti windup (average error x 1.5)
+    1,   // small error range, in degrees
     100, // small error range timeout, in milliseconds
     2,   // large error range, in degrees
     500, // large error range timeout, in milliseconds

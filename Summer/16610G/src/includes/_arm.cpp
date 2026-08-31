@@ -15,8 +15,17 @@ bool armactive = false;
 uint32_t armstart = 0;
 double armtarget = 0;
 
+double armAngle() {
+    double angle = std::fmod((armrotation.get_position() / 100.0) * 4.0, 360.0);
+    return angle < 0 ? angle + 360.0 : angle;
+}
+
+double armAngleError(double target, double current) {
+    return std::fmod(target - current + 180.0, 360.0) - 180.0;
+}
+
 double armPIDoutput() {
-    double error = armtarget - armrotation.get_position()*4 % 360;
+    double error = armAngleError(armtarget, armAngle());
 
     double proportional = error;
     if (std::fabs(error) <= armAwr) {
@@ -36,9 +45,10 @@ void armPIDupdate() {
     if (!armactive) return;
 
     bool timedout = pros::millis() - armstart >= armtimeout;
-    bool exitrange = std::fabs(armtarget - armrotation.get_position()*4 % 360) <= armexitrange;
+    bool exitrange = std::fabs(armAngleError(armtarget, armAngle())) <= armexitrange;
 
     if (timedout || exitrange) {
+        armmotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
         armmotor.move_voltage(0);
         armactive = false;
         return;
@@ -50,7 +60,7 @@ void armPIDupdate() {
 void armPIDreset() {
     armintegral = 0;
     armderivative = 0;
-    armlasterror = armtarget - armrotation.get_position()*4 % 360;
+    armlasterror = armAngleError(armtarget, armAngle());
 }
 
 void armPIDtarget(double target) {

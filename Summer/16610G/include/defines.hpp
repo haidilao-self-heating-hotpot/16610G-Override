@@ -67,7 +67,7 @@ inline MotorGroup intake(
     {leftintakeport, rightintakeport}
 );
 
-inline Motor armmotor(armmotorport, MotorGears::green); //stc
+inline Motor armmotor(armmotorport, MotorGears::green); //stc 
 
 
 // Pneumatics Definitions --------------------------------------------------------------------
