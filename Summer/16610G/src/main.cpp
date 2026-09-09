@@ -31,6 +31,7 @@ void initialize()
     claw.set_value(true);
 
     pros::Task movement(movementFn, nullptr, "Lift");
+    chassis.setPose(-55, -8, 270);
 }
 
 /// Called when robot is disabled
@@ -91,52 +92,69 @@ void opcontrol()
             matchStart = pros::millis();
             master.rumble("_");
         }
+
+        //Drivetrain
+        int forward = LEFT_Y;
+        int turning = RIGHT_X;
+        chassis.arcade(forward, turning, 0.54);
+
+        //Intake
+        if (L2_HELD) {
+            intake.move(127);
+        } else if (L1_HELD) {
+            intake.move(-127);
+        } else {
+            intake.move(0);
+        }
+
         pros::delay(10);
 
-        if (LEFT_NEW_PRESS) {
+        master.print(0,1,"%.2f/%.2f/%.1f", chassis.getPose().x, chassis.getPose().y, chassis.getPose().theta);
 
-        master.clear();
+        // if (LEFT_NEW_PRESS) {
 
-        // // angular awr
-        // double tot = 0;
-        // for (double i = 9.99; i <= 180; i += 10) {
-        // 	double target = chassis.getPose().theta + i;
-        // 	chassis.turnToHeading(target, 1500);
-        // 	delay(2000);
-        // 	tot += target - chassis.getPose().theta;
-        // }
+        // master.clear();
 
-        // delay(500);
-        // master.print(0, 0, "%.5f", tot);
-        // lcd::print(6, 0, "%.5f", tot);
-        // delay(3000);
+        // // // angular awr
+        // // double tot = 0;
+        // // for (double i = 9.99; i <= 180; i += 10) {
+        // // 	double target = chassis.getPose().theta + i;
+        // // 	chassis.turnToHeading(target, 1500);
+        // // 	delay(2000);
+        // // 	tot += target - chassis.getPose().theta;
+        // // }
+
+        // // delay(500);
+        // // master.print(0, 0, "%.5f", tot);
+        // // lcd::print(6, 0, "%.5f", tot);
+        // // delay(3000);
         
-        // int tar = 180;
-        // chassis.turnToHeading(tar, 3000);
-        // delay(2500);
-        // master.print(0, 0, "%.3f", tar - chassis.getPose().theta);
-        // delay(3000);
+        // // int tar = 180;
+        // // chassis.turnToHeading(tar, 3000);
+        // // delay(2500);
+        // // master.print(0, 0, "%.3f", tar - chassis.getPose().theta);
+        // // delay(3000);
 
-        // lateral awr
-        // double tot = 0;
-        // for (double i = 8; i <= 32; i += 8) {
-        // 	double target = chassis.getPose().y + i;
-        // 	chassis.moveToPoint(0, target, 4000);
-        // 	delay(4050);
-        // 	master.print(0, 0, "%f", target-chassis.getPose().y);
-        // 	tot += target-chassis.getPose().y;
+        // // lateral awr
+        // // double tot = 0;
+        // // for (double i = 8; i <= 32; i += 8) {
+        // // 	double target = chassis.getPose().y + i;
+        // // 	chassis.moveToPoint(0, target, 4000);
+        // // 	delay(4050);
+        // // 	master.print(0, 0, "%f", target-chassis.getPose().y);
+        // // 	tot += target-chassis.getPose().y;
+        // // }
+        // // master.print(2, 0, "%.2f", tot);
+        // // delay(5000);
+
+        // double tar = 24;
+        // int time = 4000;
+        // chassis.moveToPoint(0, tar, time);
+        // delay(time+100);
+        // master.print(0, 0, "%.2f", tar-chassis.getPose().y);
+        // delay(100);
+        // master.print(2, 0, "%.2f", chassis.getPose().y);
         // }
-        // master.print(2, 0, "%.2f", tot);
-        // delay(5000);
-
-        double tar = 24;
-        int time = 4000;
-        chassis.moveToPoint(0, tar, time);
-        delay(time+100);
-        master.print(0, 0, "%.2f", tar-chassis.getPose().y);
-        delay(100);
-        master.print(2, 0, "%.2f", chassis.getPose().y);
-        }
 
         // if (LEFT_NEW_PRESS) {
         //     armPIDtarget(0);

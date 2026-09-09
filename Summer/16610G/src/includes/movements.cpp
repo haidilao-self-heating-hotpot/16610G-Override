@@ -57,24 +57,10 @@ void movementFn(void* param) {
         liftPIDupdate();
         armPIDupdate();
 
-        //Drivetrain
-        int forward = LEFT_Y;
-        int turning = RIGHT_X;
-        chassis.arcade(forward, turning, 0.54);
-
         //Intake Mode
         if (L2_NEW_PRESS) {
             liftPIDtarget(15);
             armPIDtarget(55);
-        }
-
-        //Intake
-        if (L2_HELD) {
-            intake.move(127);
-        } else if (L1_HELD) {
-            intake.move(-127);
-        } else {
-            intake.move(0);
         }
 
         //Side Toggle

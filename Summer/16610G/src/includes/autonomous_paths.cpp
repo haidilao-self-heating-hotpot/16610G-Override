@@ -269,198 +269,203 @@ void soloawp()
 
 void skills()
 {
-    // setting ze starting position
-    chassis.setPose(-60, -15, 305);
-    claw.set_value(true);
+    // start robot by aligning to tile (set pose is in initialize, drag to correct starting position)
+    claw.retract();
 
-    // toggle ze toggle once using front pull toggle
-    chassis.moveToPoint(-63, -12.5, 1000, {.forwards = true, .maxSpeed = 110, .minSpeed = 40}, false);
-    chassis.moveToPoint(-57, -12.5, 1000, {.forwards = false, .maxSpeed = 110, .minSpeed = 40}, false);
-
-
-    // move to back to goal + score 1st pin
-    liftPIDtarget(9);
-    while (liftactive)
-    {
-        pros::delay(10);
-    }
-    delay(1000);
-    // moveTo(-54, -17.5, 800, 500, false, 100, 100, false);
-
-    // score pin as you rotate
-    chassis.arcade(-40, 0);
-    chassis.turnToHeading(270, 1500, {.direction = AngularDirection::CCW_COUNTERCLOCKWISE, .maxSpeed = 100, .minSpeed = 40}, true);
-    liftPIDtarget(7.5);
-    while (liftactive)
-    {
-        pros::delay(10);
-    }
-    delay(1000);
-    claw.set_value(false);
-    delay(200);
-    chassis.cancelMotion();
-    chassis.arcade(0, 0);
-
-
-    // pick up new pin + score 2nd pin 
-    armPIDtarget(90);
-    while (armactive)
-    {
-        pros::delay(10);
-    }
-    liftPIDtarget(6.5);
-    while (liftactive)
-    {
-        pros::delay(10);
-    }
-    delay(1000);
-    chassis.moveToPoint(-60, -23.5, 500, {.forwards = true, .maxSpeed = 110, .minSpeed = 40}, false);
-    claw.set_value(true);
-
-    // move back to score
-    liftPIDtarget(15.5);
-    while (liftactive)
-    {
-        pros::delay(10);
-    }
-    delay(1000);
-    chassis.moveToPoint(-55.5, -23.5, 600, {.forwards = false, .maxSpeed = 110, .minSpeed = 40}, false);
-    armPIDtarget(-90);
-    while (armactive)
-    {
-        pros::delay(10);
-    }
-    liftPIDtarget(14.5);
-    while (liftactive)
-    {
-        pros::delay(10);
-    }
-    claw.set_value(false);
+    // toggle the toggle once using front pull toggle
+    rightdrive.move(100);
     delay(500);
+    rightdrive.move(-127);
+    delay(300);
+    rightdrive.move(0);
 
-    // swing to face 90 degrees while swinging arm
-    liftPIDtarget(21.5);
-    chassis.turnToHeading(180, 1500, {.direction = AngularDirection::CCW_COUNTERCLOCKWISE, .maxSpeed = 100, .minSpeed = 40}, false);    
-    armPIDtarget(90);
-    chassis.arcade(-80, 0);
-    delay(200);
-    chassis.cancelMotion();
-    chassis.arcade(0, 0);
-    chassis.turnToHeading(90, 1500, {.direction = AngularDirection::CCW_COUNTERCLOCKWISE, .maxSpeed = 100, .minSpeed = 40}, true);
-    liftPIDtarget(6.7);
-    while (liftactive)
-    {
-        pros::delay(10);
-    }   
-    delay(200);
-    chassis.arcade(-80, 0);
-    delay(200);
-    chassis.cancelMotion();
-    chassis.arcade(0, 0);
+    // move to back to goal + score the 1st pin
+    liftPIDtarget(9);
+    chassis.turnToPoint(-55, -17, 500, {.forwards = false, .maxSpeed = 100, .minSpeed = 60, .earlyExitRange = 2.5});
+    chassis.moveToPoint(-55, -17, 500, {.forwards = false, .maxSpeed = 100, .minSpeed = 60, .earlyExitRange = 1});
+
+    claw.extend();
+    liftPIDtarget(6);
+
+    //--- above completed
+    
+    // // moveTo(-54, -17.5, 800, 500, false, 100, 100, false);
+
+    // // score pin as you rotate
+    // chassis.arcade(-40, 0);
+    // chassis.turnToHeading(270, 1500, {.direction = AngularDirection::CCW_COUNTERCLOCKWISE, .maxSpeed = 100, .minSpeed = 40}, true);
+    // liftPIDtarget(7.5);
+    // while (liftactive)
+    // {
+    //     pros::delay(10);
+    // }
+    // delay(1000);
+    // claw.set_value(false);
+    // delay(200);
+    // chassis.cancelMotion();
+    // chassis.arcade(0, 0);
 
 
-    // reset position
-    chassis.turnToHeading(90, 1000, {.maxSpeed = 100, .minSpeed = 40}, false);
-    right_distance = rightdist.get_distance() / 25.4;
-    back_distance = backdist.get_distance() / 25.4;
-    heading = imu.get_heading();
-    chassis.setPose(back_distance - 62.5, back_distance - 62.5, heading);
+    // // pick up new pin + score 2nd pin 
+    // armPIDtarget(90);
+    // while (armactive)
+    // {
+    //     pros::delay(10);
+    // }
+    // liftPIDtarget(6.5);
+    // while (liftactive)
+    // {
+    //     pros::delay(10);
+    // }
+    // delay(1000);
+    // chassis.moveToPoint(-60, -23.5, 500, {.forwards = true, .maxSpeed = 110, .minSpeed = 40}, false);
+    // claw.set_value(true);
+
+    // // move back to score
+    // liftPIDtarget(15.5);
+    // while (liftactive)
+    // {
+    //     pros::delay(10);
+    // }
+    // delay(1000);
+    // chassis.moveToPoint(-55.5, -23.5, 600, {.forwards = false, .maxSpeed = 110, .minSpeed = 40}, false);
+    // armPIDtarget(-90);
+    // while (armactive)
+    // {
+    //     pros::delay(10);
+    // }
+    // liftPIDtarget(14.5);
+    // while (liftactive)
+    // {
+    //     pros::delay(10);
+    // }
+    // claw.set_value(false);
+    // delay(500);
+
+    // // swing to face 90 degrees while swinging arm
+    // liftPIDtarget(21.5);
+    // chassis.turnToHeading(180, 1500, {.direction = AngularDirection::CCW_COUNTERCLOCKWISE, .maxSpeed = 100, .minSpeed = 40}, false);    
+    // armPIDtarget(90);
+    // chassis.arcade(-80, 0);
+    // delay(200);
+    // chassis.cancelMotion();
+    // chassis.arcade(0, 0);
+    // chassis.turnToHeading(90, 1500, {.direction = AngularDirection::CCW_COUNTERCLOCKWISE, .maxSpeed = 100, .minSpeed = 40}, true);
+    // liftPIDtarget(6.7);
+    // while (liftactive)
+    // {
+    //     pros::delay(10);
+    // }   
+    // delay(200);
+    // chassis.arcade(-80, 0);
+    // delay(200);
+    // chassis.cancelMotion();
+    // chassis.arcade(0, 0);
 
 
-    // grab top pin between red quadrants + score
-    // moveTo(-35, -23.5, 500, 100, true, 500, 1000, false);
-    chassis.moveToPoint(-31, -23.5, 1000, {.forwards = true, .maxSpeed = 50, .minSpeed = 20}, false);
+    // // reset position
+    // chassis.turnToHeading(90, 1000, {.maxSpeed = 100, .minSpeed = 40}, false);
+    // right_distance = rightdist.get_distance() / 25.4;
+    // back_distance = backdist.get_distance() / 25.4;
+    // heading = imu.get_heading();
+    // chassis.setPose(back_distance - 62.5, back_distance - 62.5, heading);
+
+
+    // // grab top pin between red quadrants + score
+    // // moveTo(-35, -23.5, 500, 100, true, 500, 1000, false);
+    // chassis.moveToPoint(-31, -23.5, 1000, {.forwards = true, .maxSpeed = 50, .minSpeed = 20}, false);
     
 
-    // grab bottom pin between red quadrants + score
-    // moveTo(-47, -47, 500, 800, true, 500, 1000, false);
-    chassis.moveToPoint(-47, -38.5, 1000, {.forwards = true, .maxSpeed = 50, .minSpeed = 20}, false);
+    // // grab bottom pin between red quadrants + score
+    // // moveTo(-47, -47, 500, 800, true, 500, 1000, false);
+    // chassis.moveToPoint(-47, -38.5, 1000, {.forwards = true, .maxSpeed = 50, .minSpeed = 20}, false);
 
 
-    // move to matchloader
-    // moveTo(-58, -59, 500, 1500, true, 100, 100, true);
-    delay(1000);
-    armPIDtarget(90);
-    while (armactive)
-    {
-        pros::delay(10);
-    }
-    liftPIDtarget(0);
-    while (liftactive)
-    {
-        pros::delay(10);
-    }
-    claw.set_value(false);
-    delay(500);
+    // // move to matchloader
+    // // moveTo(-58, -59, 500, 1500, true, 100, 100, true);
+    // delay(1000);
+    // armPIDtarget(90);
+    // while (armactive)
+    // {
+    //     pros::delay(10);
+    // }
+    // liftPIDtarget(0);
+    // while (liftactive)
+    // {
+    //     pros::delay(10);
+    // }
+    // claw.set_value(false);
+    // delay(500);
 
-    // grab pin
-    // moveTo(-63, -59, 500, 1000, true, 100, 80, false);
-    delay(200);
-    claw.set_value(true);
+    // // grab pin
+    // // moveTo(-63, -59, 500, 1000, true, 100, 80, false);
+    // delay(200);
+    // claw.set_value(true);
 
-    // loop to score pins + cups in red right alliance goal
+    // // loop to score pins + cups in red right alliance goal
+    // // liftHeight = 8.5;
+    // for (int runNumber = 0; runNumber <= 6; runNumber++)
+    // {
+    //     // move back
+    //     chassis.moveToPoint(-58, -59, 700, {.forwards = false, .maxSpeed = 80, .minSpeed = 30}, false);
+
+    //     // move to the goal
+    //     // moveTo(-31, -50, 1000, 2200, false, 50, 80, true);
+    //     liftPIDtarget(liftHeight);
+    //     delay(200);
+    //     armPIDtarget(-90);
+    //     while (armactive)
+    //     {
+    //         pros::delay(10);
+    //     }
+
+    //     // score pin
+    //     chassis.arcade(-30, 0);
+    //     liftPIDtarget(liftHeight - 0.8);
+    //     while (liftactive)
+    //     {
+    //         pros::delay(10);
+    //     }
+    //     claw.set_value(false);
+    //     liftPIDtarget(liftHeight - 1);
+    //     while (liftactive)
+    //     {
+    //         pros::delay(10);
+    //     }
+
+    //     // move down to align to matchloader, swing claw forward, and lower lift
+    //     claw.set_value(false);
+    //     chassis.moveToPoint(-58, -59, 2000, {.forwards = true, .maxSpeed = 100, .minSpeed = 40}, true);
+    //     armPIDtarget(90);
+    //     liftPIDtarget(0);
+    //     while (liftactive)
+    //     {
+    //         pros::delay(10);
+    //     }
+
+    //     // go to matchloader and grab pin
+    //     // moveTo(-63, -59, 700, 1000, true, 100, 100, false);
+    //     claw.set_value(true);
+
+    //     liftHeight += 7;
+
+    // }
+
+    // // reset lift height value
     // liftHeight = 8.5;
-    for (int runNumber = 0; runNumber <= 6; runNumber++)
-    {
-        // move back
-        chassis.moveToPoint(-58, -59, 700, {.forwards = false, .maxSpeed = 80, .minSpeed = 30}, false);
+    // liftPIDtarget(0);
 
-        // move to the goal
-        // moveTo(-31, -50, 1000, 2200, false, 50, 80, true);
-        liftPIDtarget(liftHeight);
-        delay(200);
-        armPIDtarget(-90);
-        while (armactive)
-        {
-            pros::delay(10);
-        }
+    // // toggle red right alliance toggle
+    // chassis.turnToHeading(180, 1000, {.direction = AngularDirection::CCW_COUNTERCLOCKWISE, .maxSpeed = 100, .minSpeed = 40}, false);
+    // chassis.arcade(-40, 0);
+    // delay(200);
+    // // moveTo(-8, -63, 800, 1400, true, 100, 100, false);  
 
-        // score pin
-        chassis.arcade(-30, 0);
-        liftPIDtarget(liftHeight - 0.8);
-        while (liftactive)
-        {
-            pros::delay(10);
-        }
-        claw.set_value(false);
-        liftPIDtarget(liftHeight - 1);
-        while (liftactive)
-        {
-            pros::delay(10);
-        }
-
-        // move down to align to matchloader, swing claw forward, and lower lift
-        claw.set_value(false);
-        chassis.moveToPoint(-58, -59, 2000, {.forwards = true, .maxSpeed = 100, .minSpeed = 40}, true);
-        armPIDtarget(90);
-        liftPIDtarget(0);
-        while (liftactive)
-        {
-            pros::delay(10);
-        }
-
-        // go to matchloader and grab pin
-        // moveTo(-63, -59, 700, 1000, true, 100, 100, false);
-        claw.set_value(true);
-
-        liftHeight += 7;
-
-    }
-
-    // reset lift height value
-    liftHeight = 8.5;
-    liftPIDtarget(0);
-
-    // toggle red right alliance toggle
-    chassis.turnToHeading(180, 1000, {.direction = AngularDirection::CCW_COUNTERCLOCKWISE, .maxSpeed = 100, .minSpeed = 40}, false);
-    chassis.arcade(-40, 0);
-    delay(200);
-    // moveTo(-8, -63, 800, 1400, true, 100, 100, false);  
-
-    // park
-    chassis.moveToPoint(-8, -26, 2000, {.forwards = false, .maxSpeed = 120, .minSpeed = 70}, false);
+    // // park
+    // chassis.moveToPoint(-8, -26, 2000, {.forwards = false, .maxSpeed = 120, .minSpeed = 70}, false);
 
 }
+
 
 void sawp()
 {
