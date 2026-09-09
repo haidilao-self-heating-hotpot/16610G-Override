@@ -68,7 +68,7 @@ inline MotorGroup lift(
 
 inline Motor intake(intakeport, MotorGears::green);
 
-inline Motor armmotor(armmotorport, MotorGears::green); //stc
+inline Motor armmotor(armmotorport, MotorGears::green); //stc 
 
 
 // Pneumatics Definitions --------------------------------------------------------------------

@@ -4,7 +4,7 @@
 #include "main.h"
 
 // Constants
-constexpr double PI = 3.141592;
+constexpr double PI = 3.141593;
 
 /*---Controller---*/
 inline pros::Controller master(pros::E_CONTROLLER_MASTER);

@@ -269,8 +269,6 @@ void soloawp()
 
 void skills()
 {
-
-
     // setting ze starting position
     chassis.setPose(-60, -15, 305);
     claw.set_value(true);
@@ -458,7 +456,6 @@ void skills()
     chassis.arcade(-40, 0);
     delay(200);
     // moveTo(-8, -63, 800, 1400, true, 100, 100, false);  
-
 
     // park
     chassis.moveToPoint(-8, -26, 2000, {.forwards = false, .maxSpeed = 120, .minSpeed = 70}, false);
