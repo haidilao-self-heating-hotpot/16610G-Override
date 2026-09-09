@@ -10,7 +10,6 @@ void on_center_button() {}
 /// Sets up chassis calibration, LCD, motors, and starts the periodic task
 void initialize()
 {
-    // autonSelect.start();
     chassis.calibrate(); // Calibrate IMU and odometry
 
     // autonomousRoute{"team colour (red/blue)", "name of auton", "description", functionName},
@@ -22,17 +21,16 @@ void initialize()
         autonomousRoute{"red", "RightAuton", "RIGHT Auton", rightAuton}});
     autonSelect.setSkillsAuton(autonomousRoute{"red", "Skills", "Skills Auton", skills});
     autonSelect.start(); // Start autonomous selector task
-
+    
+    robotstate = 0;
     rightdrive.set_brake_mode_all(coast);
     leftdrive.set_brake_mode_all(coast);
     lift.set_brake_mode_all(hold);
-    
+    armmotor.set_brake_mode_all(hold);
 
-    matchloaderpiston.set_value(false);
-    clawclamp.set_value(true);
-    clawswing.set_value(true);
+    claw.set_value(true);
 
-    pros::Task liftTask(liftTaskFn, nullptr, "Lift");
+    pros::Task movement(movementFn, nullptr, "Lift");
 }
 
 /// Called when robot is disabled
@@ -61,95 +59,91 @@ void opcontrol()
     // clawclamp.set_value(false);
     // clawswing.set_value(false);
 
-    // for vibrate after 1 minute 30 seconds
-    int timer = 0;
+    uint32_t matchStart = pros::millis(); // for vibrate after 1 minute 30 seconds
 
     // for setting brake mode to coast
     rightdrive.set_brake_mode_all(coast);
     leftdrive.set_brake_mode_all(coast);
-    bool clawClampState = false;
-    bool matchloadingState = false;
 
     // main loop
     while (true)
-    {
+    {   
 
-        // Drivetrain
-        int forward = LEFT_Y;
-        int turning = RIGHT_X;
-        chassis.arcade(forward, turning, /* true */ false, 0.5);
+        /*Controls:
+            L2 - Intake
+            L1 - Outtake
+            R2 - Lift Down
+            R1 - Lift Up
 
-        // Cascade Lift
-        if (R1_HELD)
-        {
-            lift.move(127);
-        }
-        else if (R2_HELD)
-        {
-            lift.move(-127);
-        }
-        else
-        {
-            lift.move(0);
-        }
+            UP - Vacant
+            LEFT - Vacant
+            RIGHT - Side Toggle 1
+            DOWN - Claw Close
 
-        // Intake
-        if (L1_HELD && matchloadingState)
-        {
-            intake.move(40);
-        }
-        else if (L1_HELD)
-        {
-            intake.move(127);
-        }
-        else if (L2_HELD)
-        {
-            intake.move(-127);
-        }
-        else
-        {
-            intake.move(0);
-        }
+            X - Arm Up
+            Y - Side Toggle 2
+            B - Claw Open
+            A - Arm Down
+        */
 
-        // Claw clamp piston, down is open b is closed
-        if (DOWN_NEW_PRESS && !clawClampState)
+        if (pros::millis() - matchStart >= 90000) // 1 minute 30 seconds
         {
-            clawclamp.set_value(true);
-            clawClampState = true;
-        }
-
-        if (B_NEW_PRESS && clawClampState)
-        {
-            clawclamp.set_value(false);
-            clawClampState = false;
-        }
-
-        // Claw swing piston
-        if (A_NEW_PRESS)
-        {
-            clawswing.toggle();
-        }
-
-        // Match loader piston
-        if (X_NEW_PRESS)
-        {
-            matchloadingState = !matchloadingState;
-            matchloaderpiston.set_value(matchloadingState);
-        }
-
-        timer += 1;
-        if (timer == 9000) // 1 minute 30 seconds at 10ms intervals
-        {
-            // Vibrate the controller
-            timer = 0;
+            matchStart = pros::millis();
             master.rumble("_");
         }
         pros::delay(10);
 
-        // testing
-        if (Y_NEW_PRESS)
-        {
-            master.print(0, 0, "Height: %.2f", currentHeight());
+        if (LEFT_NEW_PRESS) {
+
+        master.clear();
+
+        // // angular awr
+        // double tot = 0;
+        // for (double i = 9.99; i <= 180; i += 10) {
+        // 	double target = chassis.getPose().theta + i;
+        // 	chassis.turnToHeading(target, 1500);
+        // 	delay(2000);
+        // 	tot += target - chassis.getPose().theta;
+        // }
+
+        // delay(500);
+        // master.print(0, 0, "%.5f", tot);
+        // lcd::print(6, 0, "%.5f", tot);
+        // delay(3000);
+        
+        // int tar = 180;
+        // chassis.turnToHeading(tar, 3000);
+        // delay(2500);
+        // master.print(0, 0, "%.3f", tar - chassis.getPose().theta);
+        // delay(3000);
+
+        // lateral awr
+        // double tot = 0;
+        // for (double i = 8; i <= 32; i += 8) {
+        // 	double target = chassis.getPose().y + i;
+        // 	chassis.moveToPoint(0, target, 4000);
+        // 	delay(4050);
+        // 	master.print(0, 0, "%f", target-chassis.getPose().y);
+        // 	tot += target-chassis.getPose().y;
+        // }
+        // master.print(2, 0, "%.2f", tot);
+        // delay(5000);
+
+        double tar = 24;
+        int time = 4000;
+        chassis.moveToPoint(0, tar, time);
+        delay(time+100);
+        master.print(0, 0, "%.2f", tar-chassis.getPose().y);
+        delay(100);
+        master.print(2, 0, "%.2f", chassis.getPose().y);
         }
+
+        // if (LEFT_NEW_PRESS) {
+        //     armPIDtarget(0);
+        // }
+        // if (RIGHT_NEW_PRESS) {
+        //     armPIDtarget(90);
+        // }
     }
 }
+   

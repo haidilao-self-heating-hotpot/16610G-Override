@@ -1,36 +1,26 @@
 #include "includes.hpp"
 
-//winch constants
-
-double baseheight = 0;
-double winchdiameter = 0.75;
-double wpl = 6;
-double cablediameter = 0.0625;
-
 //pid constants
 
-double liftkP = 1000;
-double liftkI = 0;
-double liftkD = 300;
-double gravity = 0;
-double liftAwr = 0;
+double liftkP = 4000;
+double liftkI = 7;
+double liftkD = 50;
+double gravity = 2500;
+double liftAwr = 2;
 double liftexitrange = 0.25;
 double lifttimeout = 2500; //millisecond
 
 double currentHeight() 
 {
-    double winchrotations = lift.get_position() / 360.0;
-    double winchheight = 0;
-    for (int i = 0; i < winchrotations; i++) {
-        winchheight += M_PI * (winchdiameter + (2 * cablediameter * std::floor(i / wpl)));
-    }
-    winchheight += (winchrotations - std::floor(winchrotations)) * M_PI * (winchdiameter + (2 * cablediameter * std::floor(winchrotations / wpl)));
-    return baseheight + winchheight;
+    double x = winchrotation.get_position() / 36000.0;
+    return 2.663*x + 5.224; // linear regression found by testing
 }
 
-double integral = 0;
-double derivative = 0;
-double lasterror = 0;
+static double liftintegral = 0;
+static double liftderivative = 0;
+static double liftlasterror = 0;
+
+
 bool liftactive = false;
 uint32_t liftstart = 0;
 double lifttarget = 0;
@@ -39,41 +29,70 @@ double liftPIDoutput()
 {   
     double error = lifttarget - currentHeight();
 
-    double proportional = error;
     if (std::fabs(error) <= liftAwr) {
-        integral += error * 0.01;
+        liftintegral += error * 0.01;
     } else {
-        integral = 0;
+        liftintegral = 0;
     }
-    double rawderivative = (error - lasterror) / 0.01;
-    derivative = (0.3 * rawderivative) + ((1 - 0.3) * derivative);
-    lasterror = error;
-    
-    double output = (liftkP * proportional) + (liftkI * integral) + (liftkD * derivative) + gravity;
+    double rawderivative = (error - liftlasterror) / 0.01;
+    liftderivative = (0.3 * rawderivative) + (0.7 * liftderivative);
+    liftlasterror = error;
+
+    double output = (liftkP * error) + (liftkI * liftintegral) + (liftkD * liftderivative) + gravity;
+    master.print(0,0,"%.3f", error);
+    delay(50);
+    // master.print(2,0,"%.3f", liftderivative);
+    // delay(50);
+
     return std::clamp(output, -12000.0, 12000.0);
 }
 
 void liftPIDreset()
 {
-    integral = 0;
-    derivative = 0;
-    lasterror = lifttarget - currentHeight();
+    liftintegral = 0;
+    liftderivative = 0;
+    liftlasterror = lifttarget - currentHeight();
 }
 
-void liftPID(double target) {
+void liftPIDtarget(double target) {
+    lift.set_brake_mode_all(coast);
     lifttarget = target;
     liftPIDreset();
     liftstart = pros::millis();
     liftactive = true;
 }
 
+bool liftmanualheld = false;
+double liftmanualvoltage = 12000;
+
 void liftPIDupdate() {
+
+    if (robotstate == 1) {
+        master.print(1, 0, "Manual Control");
+
+        bool manualUp   = master.get_digital(pros::E_CONTROLLER_DIGITAL_R1); 
+        bool manualDown = master.get_digital(pros::E_CONTROLLER_DIGITAL_R2);
+
+        if (manualUp || manualDown) {
+            liftactive = false;
+            liftmanualheld = true;
+            lift.move_voltage(manualUp ? liftmanualvoltage : -liftmanualvoltage);
+            return;
+        }
+
+        if (liftmanualheld) {
+            liftmanualheld = false;
+            liftPIDtarget(currentHeight());
+        }
+    }
+
     if (!liftactive) return;
 
     bool timedout = pros::millis() - liftstart >= lifttimeout;
     bool exitrange = std::fabs(lifttarget - currentHeight()) <= liftexitrange;
 
     if (timedout || exitrange) {
+        lift.set_brake_mode_all(hold);
         lift.move_voltage(0);
         liftactive = false;
         return;

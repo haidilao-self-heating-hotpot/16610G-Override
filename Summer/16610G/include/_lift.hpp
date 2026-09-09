@@ -1,12 +1,13 @@
 #ifndef LIFT_HPP
 #define LIFT_HPP
 
+// winch geometry constants (defined in lift.cpp)
 extern double baseheight;
-extern double basewinchdiameter;
+extern double winchdiameter;
 extern double wpl;
 extern double cablediameter;
-extern double totalwraplayers;
 
+// tuning constants (defined in lift.cpp)
 extern double liftkP;
 extern double liftkI;
 extern double liftkD;
@@ -14,24 +15,16 @@ extern double gravity;
 extern double liftAwr;
 extern double liftexitrange;
 extern double lifttimeout;
+extern double liftmanualvoltage;
 
-double currentHeight();
-
-extern double integral;
-extern double derivative;
-extern double lasterror;
+// runtime state (defined in lift.cpp)
 extern bool liftactive;
 extern uint32_t liftstart;
 extern double lifttarget;
 
-double liftPIDoutput();
-
-void liftPIDreset();
-
-void liftPID(double target);
-
+// public API
+double currentHeight();
+void liftPIDtarget(double target);
 void liftPIDupdate();
-
-void liftToHeight(double height);
 
 #endif
