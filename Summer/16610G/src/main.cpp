@@ -31,7 +31,7 @@ void initialize()
     claw.set_value(true);
 
     pros::Task movement(movementFn, nullptr, "Lift");
-    chassis.setPose(-55, -8, 270);
+    chassis.setPose(-55, -8, 270); //starting on the left
 }
 
 /// Called when robot is disabled
@@ -43,13 +43,14 @@ void competition_initialize() {}
 /// Autonomous routine - runs selected autonomous strategy
 void autonomous()
 {
-    autonSelect.runAuton(); // Use autonomous selector
+    // autonSelect.runAuton(); // Use autonomous selector
     // chassis.setPose(0, 0, 0);
     // chassis.moveToPoint(0, 24, 10000);
     // right();  // Alternative right side routine
     // soloAWP();  // Run solo AWP (Autonomous Win Point) strategy
     // right2();  // Alternative strategy
     // skills(); // Run skills routine
+    leftAuton();
 }
 
 /// Main driver control loop

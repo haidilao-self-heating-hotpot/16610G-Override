@@ -59,18 +59,19 @@ float left_distance = 0.0;
 float right_distance = 0.0;
 float heading = 0.0;
 
-void leftAuton()
+void leftAutonv1()
 {
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_BRAKE);
     // set pose at stack of pins on left side of toggle
-    chassis.setPose(-60, 12.3, 318.6);
+    //chassis.setPose(-60, 12.3, 318.6);
 
     // move to cup to place preload in 
     liftPIDtarget(11);
-    chassis.moveToPoint(-61.5, 14, 500, {.forwards = false, .maxSpeed = 40, .minSpeed = 20, .earlyExitRange = 1}, true);
-    delay(300);
+    pros::delay(500);
+    chassis.moveToPoint(-61.5, 20, 500, {.forwards = false, .maxSpeed = 40, .minSpeed = 20, .earlyExitRange = 1}, true);
+    pros::delay(300);
     claw.set_value(false);
-    delay(100);
+    pros::delay(100);
 
     // move back a little and lower claw to grab 1st pin
     chassis.moveToPoint(-60.5, 13, 500, {.forwards = true, .maxSpeed = 40, .minSpeed = 20, .earlyExitRange = 1}, true);
@@ -79,135 +80,196 @@ void leftAuton()
     // move to 1st pin to grab it
     chassis.moveToPoint(61.5, 14, 500, {.forwards = false, .maxSpeed = 40, .minSpeed = 20, .earlyExitRange = 1}, false);
     claw.set_value(true);
-    delay(100);
+    pros::delay(100);
 
-    // move back with slight curve to goal to score 1st pin
-    chassis.moveToPoint(-53, 8, 500, {.forwards = true, .maxSpeed = 60, .minSpeed = 20, .earlyExitRange = 1}, true);
-    delay(200);
-    chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
-    chassis.turnToPoint(-50.5, 8, 1000, {.forwards = false, .direction = AngularDirection::CCW_COUNTERCLOCKWISE, .maxSpeed = 100, .minSpeed = 40}, false);
-    chassis.moveToPoint(-50.5, 8, 500, {.forwards = false, .maxSpeed = 60, .minSpeed = 20, .earlyExitRange = 1}, true);
-    liftMove(11, 10);
-    delay(100);
+    // // move back with slight curve to goal to score 1st pin
+    // chassis.moveToPoint(-53, 8, 500, {.forwards = true, .maxSpeed = 60, .minSpeed = 20, .earlyExitRange = 1}, true);
+    // pros::delay(200);
+    // chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
+    // chassis.turnToPoint(-50.5, 8, 1000, {.forwards = false, .direction = AngularDirection::CCW_COUNTERCLOCKWISE, .maxSpeed = 100, .minSpeed = 40}, false);
+    // chassis.moveToPoint(-50.5, 8, 500, {.forwards = false, .maxSpeed = 60, .minSpeed = 20, .earlyExitRange = 1}, true);
+    // liftMove(11, 10);
+    // pros::delay(100);
 
-    // score 1st pin
-    liftPIDtarget(10);    
-    delay(100);
-    claw.set_value(false);
+    // // score 1st pin
+    // liftPIDtarget(10);    
+    // pros::delay(100);
+    // claw.set_value(false);
 
-    // move out to go grab 2nd pin
-    chassis.moveToPoint(-53, 8, 500, {.forwards = true, .maxSpeed = 60, .minSpeed = 20, .earlyExitRange = 1}, true);
-    liftMove(6.5, 10);
-    chassis.turnToPoint(-61, 16, 1000, {.forwards = false, .direction = AngularDirection::CCW_COUNTERCLOCKWISE, .maxSpeed = 100, .minSpeed = 40}, false);
+    // // move out to go grab 2nd pin
+    // chassis.moveToPoint(-53, 8, 500, {.forwards = true, .maxSpeed = 60, .minSpeed = 20, .earlyExitRange = 1}, true);
+    // liftMove(6.5, 10);
+    // chassis.turnToPoint(-61, 16, 1000, {.forwards = false, .direction = AngularDirection::CCW_COUNTERCLOCKWISE, .maxSpeed = 100, .minSpeed = 40}, false);
 
-    // move to 2nd pin to grab it
-    chassis.moveToPoint(-61, 16, 500, {.forwards = false, .maxSpeed = 70, .minSpeed = 20, .earlyExitRange = 1}, false);
-    claw.set_value(true);
-    delay(100);
+    // // move to 2nd pin to grab it
+    // chassis.moveToPoint(-61, 16, 500, {.forwards = false, .maxSpeed = 70, .minSpeed = 20, .earlyExitRange = 1}, false);
+    // claw.set_value(true);
+    // pros::delay(100);
 
-    // move back with slight curve to goal to score 2nd pin
-    liftPIDtarget(18);
-    chassis.moveToPoint(-53, 8, 500, {.forwards = true, .maxSpeed = 60, .minSpeed = 20, .earlyExitRange = 1}, true);
-    delay(200);
-    chassis.turnToPoint(-50.5, 8, 1000, {.forwards = false, .direction = AngularDirection::CCW_COUNTERCLOCKWISE, .maxSpeed = 100, .minSpeed = 40}, false);
-    chassis.moveToPoint(-50.5, 8, 700, {.forwards = false, .maxSpeed = 60, .minSpeed = 20, .earlyExitRange = 1}, true);
+    // // move back with slight curve to goal to score 2nd pin
+    // liftPIDtarget(18);
+    // chassis.moveToPoint(-53, 8, 500, {.forwards = true, .maxSpeed = 60, .minSpeed = 20, .earlyExitRange = 1}, true);
+    // pros::delay(200);
+    // chassis.turnToPoint(-50.5, 8, 1000, {.forwards = false, .direction = AngularDirection::CCW_COUNTERCLOCKWISE, .maxSpeed = 100, .minSpeed = 40}, false);
+    // chassis.moveToPoint(-50.5, 8, 700, {.forwards = false, .maxSpeed = 60, .minSpeed = 20, .earlyExitRange = 1}, true);
 
-    // score 2nd pin
-    liftPIDtarget(17);
-    delay(100);
-    claw.set_value(false);
-    delay(100);
+    // // score 2nd pin
+    // liftPIDtarget(17);
+    // pros::delay(100);
+    // claw.set_value(false);
+    // pros::delay(100);
 
-    // toggle ze toggle
-    chassis.moveToPoint(-65, 0, 1200, {.forwards = true, .maxSpeed = 100, .minSpeed = 30}, false);
-    liftPIDtarget(6.5);
+    // // toggle ze toggle
+    // chassis.moveToPoint(-65, 0, 1200, {.forwards = true, .maxSpeed = 100, .minSpeed = 30}, false);
+    // liftPIDtarget(6.5);
 
-    // move to middle pin 
-    chassis.setBrakeMode(pros::E_MOTOR_BRAKE_BRAKE);
-    chassis.moveToPoint(-35, 0, 1300, {.forwards = false, .maxSpeed = 120, .minSpeed = 40}, false);
-    delay(100);
-    chassis.moveToPoint(-32.5, 0, 800, {.forwards = false, .maxSpeed = 40, .minSpeed = 10}, false);
-    claw.set_value(true);
+    // // move to middle pin 
+    // chassis.setBrakeMode(pros::E_MOTOR_BRAKE_BRAKE);
+    // chassis.moveToPoint(-35, 0, 1300, {.forwards = false, .maxSpeed = 120, .minSpeed = 40}, false);
+    // pros::delay(100);
+    // chassis.moveToPoint(-32.5, 0, 800, {.forwards = false, .maxSpeed = 40, .minSpeed = 10}, false);
+    // claw.set_value(true);
 
-    // score pin in middle
-    liftPIDtarget(22);
-    chassis.moveToPoint(0, 0, 1000, {.forwards = true, .maxSpeed = 100, .minSpeed = 40}, false);
-    liftPIDtarget(21);
-    delay(100);
-    claw.set_value(false);
+    // // score pin in middle
+    // liftPIDtarget(22);
+    // chassis.moveToPoint(0, 0, 1000, {.forwards = true, .maxSpeed = 100, .minSpeed = 40}, false);
+    // liftPIDtarget(21);
+    // pros::delay(100);
+    // claw.set_value(false);
 
-    // grab top pin in between two alliance quadrants
-    liftPIDtarget(0);
-    chassis.moveToPoint(-17, 0, 800, {.forwards = true, .maxSpeed = 100}, false);
-    // liftStopPiston.set_value(true);
-    liftPIDtarget(15);
-    chassis.turnToPoint(-19.5, -13.5, 1000, {.forwards = true, .direction = AngularDirection::CCW_COUNTERCLOCKWISE, .maxSpeed = 100, .minSpeed = 40}, false);
-    if (liftactive)
-    {
-        pros::delay(300);
-    }
-    armPIDtarget(90);
-    chassis.moveToPoint(-19.5, -13.5, 1200, {.forwards = true, .maxSpeed = 120, .minSpeed = 50, .earlyExitRange = 1}, false);
-    if (armactive)
-    {
-        pros::delay(300);
-    }
-    liftPIDtarget(6.5);
-    chassis.moveToPoint(-21.5, -15.5, 800, {.forwards = true, .maxSpeed = 40, .minSpeed = 20, .earlyExitRange = 1}, false);
-    if (liftactive)
-    {
-        pros::delay(300);
-    }
-    claw.set_value(true);
+    // // grab top pin in between two alliance quadrants
+    // liftPIDtarget(0);
+    // chassis.moveToPoint(-17, 0, 800, {.forwards = true, .maxSpeed = 100}, false);
+    // // liftStopPiston.set_value(true);
+    // liftPIDtarget(15);
+    // chassis.turnToPoint(-19.5, -13.5, 1000, {.forwards = true, .direction = AngularDirection::CCW_COUNTERCLOCKWISE, .maxSpeed = 100, .minSpeed = 40}, false);
+    // if (liftactive)
+    // {
+    //     pros::pros::delay(300);
+    // }
+    // armPIDtarget(90);
+    // chassis.moveToPoint(-19.5, -13.5, 1200, {.forwards = true, .maxSpeed = 120, .minSpeed = 50, .earlyExitRange = 1}, false);
+    // if (armactive)
+    // {
+    //     pros::pros::delay(300);
+    // }
+    // liftPIDtarget(6.5);
+    // chassis.moveToPoint(-21.5, -15.5, 800, {.forwards = true, .maxSpeed = 40, .minSpeed = 20, .earlyExitRange = 1}, false);
+    // if (liftactive)
+    // {
+    //     pros::pros::delay(300);
+    // }
+    // claw.set_value(true);
     
-    // score pin
-    liftPIDtarget(15);
-    chassis.moveToPoint(-32, -34, 1000, {.forwards = false, .maxSpeed = 120, .minSpeed = 40}, false);
-    armPIDtarget(-90);
-    moveTo(-40.5, -29, 1000, 1000, false, 100, 120, false);
-    liftPIDtarget(6.5);
-    claw.set_value(false);
+    // // score pin
+    // liftPIDtarget(15);
+    // chassis.moveToPoint(-32, -34, 1000, {.forwards = false, .maxSpeed = 120, .minSpeed = 40}, false);
+    // armPIDtarget(-90);
+    // moveTo(-40.5, -29, 1000, 1000, false, 100, 120, false);
+    // liftPIDtarget(6.5);
+    // claw.set_value(false);
 
-    // turn to go to 5th pin
-    chassis.swingToHeading(180, DriveSide::LEFT, 1000, {.direction = AngularDirection::CW_CLOCKWISE, .maxSpeed = 100, .minSpeed = 40}, false);
-    liftPIDtarget(15);
-    chassis.turnToPoint(-47, -37, 500, {.forwards = true, .maxSpeed = 100, .minSpeed = 40}, false);
-    if (liftactive)
-    {
-        pros::delay(300);
-    }
-    armPIDtarget(90);
-    chassis.moveToPoint(-47, -37, 500, {.forwards = true, .maxSpeed = 100, .minSpeed = 20, .earlyExitRange = 1}, false);
-    if (armactive)
-    {
-        pros::delay(300);
-    }
-    liftPIDtarget(6.5);
-    if (liftactive)
-    {
-        pros::delay(600);
-    }
-    chassis.moveToPoint(-47, -39, 500, {.forwards = true, .maxSpeed = 40, .minSpeed = 20, .earlyExitRange = 1}, false);
-    claw.set_value(true);
+    // // turn to go to 5th pin
+    // chassis.swingToHeading(180, DriveSide::LEFT, 1000, {.direction = AngularDirection::CW_CLOCKWISE, .maxSpeed = 100, .minSpeed = 40}, false);
+    // liftPIDtarget(15);
+    // chassis.turnToPoint(-47, -37, 500, {.forwards = true, .maxSpeed = 100, .minSpeed = 40}, false);
+    // if (liftactive)
+    // {
+    //     pros::pros::delay(300);
+    // }
+    // armPIDtarget(90);
+    // chassis.moveToPoint(-47, -37, 500, {.forwards = true, .maxSpeed = 100, .minSpeed = 20, .earlyExitRange = 1}, false);
+    // if (armactive)
+    // {
+    //     pros::pros::delay(300);
+    // }
+    // liftPIDtarget(6.5);
+    // if (liftactive)
+    // {
+    //     pros::pros::delay(600);
+    // }
+    // chassis.moveToPoint(-47, -39, 500, {.forwards = true, .maxSpeed = 40, .minSpeed = 20, .earlyExitRange = 1}, false);
+    // claw.set_value(true);
 
-    // score pin
-    liftPIDtarget(15);
-    if (liftactive)
-    {
-        pros::delay(600);
-    }
-    armPIDtarget(-90);
-    if (armactive)
-    {
-        pros::delay(900);
-    }
-    liftPIDtarget(18);
-    chassis.moveToPoint(-32, -34, 1000, {.forwards = false, .maxSpeed = 120, .minSpeed = 40}, false);
-    liftPIDtarget(17);
-    delay(100);
-    claw.set_value(false);
+    // // score pin
+    // liftPIDtarget(15);
+    // if (liftactive)
+    // {
+    //     pros::pros::delay(600);
+    // }
+    // armPIDtarget(-90);
+    // if (armactive)
+    // {
+    //     pros::pros::delay(900);
+    // }
+    // liftPIDtarget(18);
+    // chassis.moveToPoint(-32, -34, 1000, {.forwards = false, .maxSpeed = 120, .minSpeed = 40}, false);
+    // liftPIDtarget(17);
+    // pros::delay(100);
+    // claw.set_value(false);
 
 
+}
+
+void leftAuton() {
+    // start robot by aligning to tile (set pose is in initialize, drag to correct starting position)
+    claw.extend();
+
+    // toggle the toggle once using front pull toggle
+    rightdrive.move(100);
+    pros::delay(500);
+    rightdrive.move(-127);
+    pros::delay(300);
+    rightdrive.move(0);
+
+    // move to back to goal + score the 1st pin
+    liftPIDtarget(9);
+    chassis.turnToPoint(-53, -15, 500, {.forwards = false, .maxSpeed = 80, .minSpeed = 60, .earlyExitRange = 2.5}, false);
+    pros::delay(500);
+    chassis.tank(-50, -50);
+    pros::delay(500);
+    claw.retract();
+    pros::delay(1000);
+
+    // turn to route and move to 2nd pin
+    chassis.moveToPoint(-56, -13, 500, {.forwards = true, .maxSpeed = 80, .minSpeed = 60, .earlyExitRange = 1});
+    liftPIDtarget(6);
+    chassis.turnToHeading(270, 500, {.maxSpeed = 100, .minSpeed = 60, .earlyExitRange = 2.5});
+    chassis.moveToPoint(-22, -13, 1000, {.forwards = false, .maxSpeed = 80});
+
+    //grab 2nd pin
+    chassis.turnToHeading(0, 500, {.maxSpeed = 80});
+    chassis.moveToPoint(-20, -20, 1500, {.forwards = false, .maxSpeed = 80});
+    claw.extend();
+    liftPIDtarget(14.5);
+    pros::delay(500);
+
+    //score 2nd pin
+    chassis.moveToPoint(-20, -26, 1000, {.forwards = false, .maxSpeed = 80});
+    chassis.turnToHeading(90, 500, {.maxSpeed = 100});
+    chassis.moveToPoint(-38, -23, 1000, {.forwards = false, .maxSpeed = 100}, false);
+    chassis.tank(-50, -50);
+    delay(500);
+    chassis.tank(0,0);
+    claw.retract();
+
+    // go to 3rd pin
+    chassis.setPose(-38, -23, 90);
+    chassis.moveToPoint(-30, -23, 1000, {.forwards = true, .maxSpeed = 100}, false);
+    liftPIDtarget(6);
+    chassis.turnToPoint(-46, -46, 500, {.forwards = false, .maxSpeed = 100});
+    chassis.moveToPoint(-43.5, -41.5, 1000, {.forwards = false, .maxSpeed = 60}, false);
+    claw.extend();
+    liftPIDtarget(21.5);
+
+    // score 3rd pin
+    delay(500);
+    chassis.moveToPoint(-46, 46, 1000, {.forwards = false, .maxSpeed = 60});
+    chassis.turnToHeading(180, 500, {.maxSpeed = 80});
+    chassis.moveToPoint(-52.5, -25, 1000, {.forwards = false, .maxSpeed = 80});
+    claw.retract();
+    delay(500);
+    chassis.tank(0,0);
 }
 
 void rightAuton()
@@ -219,48 +281,48 @@ void rightAuton()
     lift.move(+110);
     chassis.moveToPoint(-20, -52, 2500, {.forwards = false, .maxSpeed = 40, .minSpeed = 20, .earlyExitRange = 1});
 
-    delay(400);
+    pros::delay(400);
     lift.move(-110);
-    delay(1000);
+    pros::delay(1000);
     claw.set_value(false);
-    delay(100);
+    pros::delay(100);
     lift.move(0);
 
     chassis.cancelMotion();
     chassis.arcade(95, 0);
-    delay(900);
+    pros::delay(900);
     chassis.cancelMotion();
     chassis.arcade(0, 0);
-    delay(500);
+    pros::delay(500);
 
     chassis.arcade(-80, 0);
-    delay(400);
+    pros::delay(400);
     chassis.cancelMotion();
     chassis.arcade(0, 0);
-    delay(500);
+    pros::delay(500);
 
     chassis.arcade(80, 0);
-    delay(1000);
+    pros::delay(1000);
     chassis.cancelMotion();
     chassis.arcade(0, 0);
 
     chassis.arcade(-80, 0);
-    delay(1000);
+    pros::delay(1000);
     chassis.cancelMotion();
     chassis.arcade(0, 0);
 
     // chassis.arcade(80, 0);
-    // delay(500);
+    // pros::delay(500);
     // chassis.arcade(0, 0);
 
     // chassis.turnToHeading(180, 1000, {.direction = AngularDirection::CW_CLOCKWISE, .maxSpeed = 100, .minSpeed = 40}, false);
 
     // chassis.arcade(80, 0);
-    // delay(1000);
+    // pros::delay(1000);
     // chassis.arcade(-80, 0);
-    // delay(800);
+    // pros::delay(800);
     // chassis.arcade(80, 0);
-    // delay(1000);
+    // pros::delay(1000);
 }
 
 void soloawp()
@@ -270,136 +332,85 @@ void soloawp()
 void skills()
 {
     // start robot by aligning to tile (set pose is in initialize, drag to correct starting position)
-    claw.retract();
+    claw.extend();
 
     // toggle the toggle once using front pull toggle
     rightdrive.move(100);
-    delay(500);
+    pros::delay(500);
     rightdrive.move(-127);
-    delay(300);
+    pros::delay(300);
     rightdrive.move(0);
 
     // move to back to goal + score the 1st pin
     liftPIDtarget(9);
-    chassis.turnToPoint(-55, -17, 500, {.forwards = false, .maxSpeed = 100, .minSpeed = 60, .earlyExitRange = 2.5});
-    chassis.moveToPoint(-55, -17, 500, {.forwards = false, .maxSpeed = 100, .minSpeed = 60, .earlyExitRange = 1});
+    chassis.turnToPoint(-53, -15, 500, {.forwards = false, .maxSpeed = 80, .minSpeed = 60, .earlyExitRange = 2.5}, false);
+    pros::delay(500);
+    chassis.tank(-50, -50);
+    pros::delay(500);
+    claw.retract();
+    pros::delay(1000);
 
-    claw.extend();
+    // turn to route and move to 2nd pin
+    chassis.moveToPoint(-56, -13, 500, {.forwards = true, .maxSpeed = 80, .minSpeed = 60, .earlyExitRange = 1});
     liftPIDtarget(6);
+    chassis.turnToHeading(270, 500, {.maxSpeed = 100, .minSpeed = 60, .earlyExitRange = 2.5});
+    chassis.moveToPoint(-22, -13, 1000, {.forwards = false, .maxSpeed = 80});
 
-    //--- above completed
-    
-    // // moveTo(-54, -17.5, 800, 500, false, 100, 100, false);
+    //grab 2nd pin
+    chassis.turnToHeading(0, 500, {.maxSpeed = 80});
+    chassis.moveToPoint(-20, -20, 1500, {.forwards = false, .maxSpeed = 80});
+    claw.extend();
+    liftPIDtarget(14.5);
+    pros::delay(500);
 
-    // // score pin as you rotate
-    // chassis.arcade(-40, 0);
-    // chassis.turnToHeading(270, 1500, {.direction = AngularDirection::CCW_COUNTERCLOCKWISE, .maxSpeed = 100, .minSpeed = 40}, true);
-    // liftPIDtarget(7.5);
-    // while (liftactive)
-    // {
-    //     pros::delay(10);
-    // }
-    // delay(1000);
-    // claw.set_value(false);
-    // delay(200);
-    // chassis.cancelMotion();
-    // chassis.arcade(0, 0);
+    //score 2nd pin
+    chassis.moveToPoint(-20, -26, 1000, {.forwards = false, .maxSpeed = 80});
+    chassis.turnToHeading(90, 500, {.maxSpeed = 100});
+    chassis.moveToPoint(-38, -23, 1000, {.forwards = false, .maxSpeed = 100}, false);
+    chassis.tank(-50, -50);
+    delay(500);
+    chassis.tank(0,0);
+    claw.retract();
 
+    // go to 3rd pin
+    chassis.setPose(-38, -23, 90);
+    chassis.moveToPoint(-30, -23, 1000, {.forwards = true, .maxSpeed = 100}, false);
+    liftPIDtarget(6);
+    chassis.turnToPoint(-46, -46, 500, {.forwards = false, .maxSpeed = 100});
+    chassis.moveToPoint(-43.5, -41.5, 1000, {.forwards = false, .maxSpeed = 60}, false);
+    claw.extend();
+    liftPIDtarget(21.5);
 
-    // // pick up new pin + score 2nd pin 
-    // armPIDtarget(90);
-    // while (armactive)
-    // {
-    //     pros::delay(10);
-    // }
-    // liftPIDtarget(6.5);
-    // while (liftactive)
-    // {
-    //     pros::delay(10);
-    // }
-    // delay(1000);
-    // chassis.moveToPoint(-60, -23.5, 500, {.forwards = true, .maxSpeed = 110, .minSpeed = 40}, false);
-    // claw.set_value(true);
+    // score 3rd pin
+    delay(500);
+    chassis.moveToPoint(-46, 46, 1000, {.forwards = false, .maxSpeed = 60});
+    chassis.turnToHeading(180, 500, {.maxSpeed = 80});
+    chassis.moveToPoint(-52.5, -25, 1000, {.forwards = false, .maxSpeed = 80});
+    claw.retract();
+    delay(500);
+    chassis.tank(0,0);
 
-    // // move back to score
-    // liftPIDtarget(15.5);
-    // while (liftactive)
-    // {
-    //     pros::delay(10);
-    // }
-    // delay(1000);
-    // chassis.moveToPoint(-55.5, -23.5, 600, {.forwards = false, .maxSpeed = 110, .minSpeed = 40}, false);
-    // armPIDtarget(-90);
-    // while (armactive)
-    // {
-    //     pros::delay(10);
-    // }
-    // liftPIDtarget(14.5);
-    // while (liftactive)
-    // {
-    //     pros::delay(10);
-    // }
-    // claw.set_value(false);
-    // delay(500);
-
-    // // swing to face 90 degrees while swinging arm
-    // liftPIDtarget(21.5);
-    // chassis.turnToHeading(180, 1500, {.direction = AngularDirection::CCW_COUNTERCLOCKWISE, .maxSpeed = 100, .minSpeed = 40}, false);    
-    // armPIDtarget(90);
-    // chassis.arcade(-80, 0);
-    // delay(200);
-    // chassis.cancelMotion();
-    // chassis.arcade(0, 0);
-    // chassis.turnToHeading(90, 1500, {.direction = AngularDirection::CCW_COUNTERCLOCKWISE, .maxSpeed = 100, .minSpeed = 40}, true);
-    // liftPIDtarget(6.7);
-    // while (liftactive)
-    // {
-    //     pros::delay(10);
-    // }   
-    // delay(200);
-    // chassis.arcade(-80, 0);
-    // delay(200);
-    // chassis.cancelMotion();
-    // chassis.arcade(0, 0);
-
-
-    // // reset position
-    // chassis.turnToHeading(90, 1000, {.maxSpeed = 100, .minSpeed = 40}, false);
-    // right_distance = rightdist.get_distance() / 25.4;
-    // back_distance = backdist.get_distance() / 25.4;
-    // heading = imu.get_heading();
-    // chassis.setPose(back_distance - 62.5, back_distance - 62.5, heading);
-
-
-    // // grab top pin between red quadrants + score
-    // // moveTo(-35, -23.5, 500, 100, true, 500, 1000, false);
-    // chassis.moveToPoint(-31, -23.5, 1000, {.forwards = true, .maxSpeed = 50, .minSpeed = 20}, false);
-    
-
-    // // grab bottom pin between red quadrants + score
-    // // moveTo(-47, -47, 500, 800, true, 500, 1000, false);
-    // chassis.moveToPoint(-47, -38.5, 1000, {.forwards = true, .maxSpeed = 50, .minSpeed = 20}, false);
-
+    //----completed
 
     // // move to matchloader
     // // moveTo(-58, -59, 500, 1500, true, 100, 100, true);
-    // delay(1000);
+    // pros::delay(1000);
     // armPIDtarget(90);
     // while (armactive)
     // {
-    //     pros::delay(10);
+    //     pros::pros::delay(10);
     // }
     // liftPIDtarget(0);
     // while (liftactive)
     // {
-    //     pros::delay(10);
+    //     pros::pros::delay(10);
     // }
     // claw.set_value(false);
-    // delay(500);
+    // pros::delay(500);
 
     // // grab pin
     // // moveTo(-63, -59, 500, 1000, true, 100, 80, false);
-    // delay(200);
+    // pros::delay(200);
     // claw.set_value(true);
 
     // // loop to score pins + cups in red right alliance goal
@@ -412,11 +423,11 @@ void skills()
     //     // move to the goal
     //     // moveTo(-31, -50, 1000, 2200, false, 50, 80, true);
     //     liftPIDtarget(liftHeight);
-    //     delay(200);
+    //     pros::delay(200);
     //     armPIDtarget(-90);
     //     while (armactive)
     //     {
-    //         pros::delay(10);
+    //         pros::pros::delay(10);
     //     }
 
     //     // score pin
@@ -424,13 +435,13 @@ void skills()
     //     liftPIDtarget(liftHeight - 0.8);
     //     while (liftactive)
     //     {
-    //         pros::delay(10);
+    //         pros::pros::delay(10);
     //     }
     //     claw.set_value(false);
     //     liftPIDtarget(liftHeight - 1);
     //     while (liftactive)
     //     {
-    //         pros::delay(10);
+    //         pros::pros::delay(10);
     //     }
 
     //     // move down to align to matchloader, swing claw forward, and lower lift
@@ -440,7 +451,7 @@ void skills()
     //     liftPIDtarget(0);
     //     while (liftactive)
     //     {
-    //         pros::delay(10);
+    //         pros::pros::delay(10);
     //     }
 
     //     // go to matchloader and grab pin
@@ -458,7 +469,7 @@ void skills()
     // // toggle red right alliance toggle
     // chassis.turnToHeading(180, 1000, {.direction = AngularDirection::CCW_COUNTERCLOCKWISE, .maxSpeed = 100, .minSpeed = 40}, false);
     // chassis.arcade(-40, 0);
-    // delay(200);
+    // pros::delay(200);
     // // moveTo(-8, -63, 800, 1400, true, 100, 100, false);  
 
     // // park
