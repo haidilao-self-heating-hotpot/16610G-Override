@@ -65,21 +65,21 @@ void movementFn(void* param) {
 
         //Side Toggle
         if (Y_NEW_PRESS) {
-            sidetoggle1.extend();
+            fork1.extend();
             togglestart1 = timer;
         }
 
         if (timer - togglestart1 > 50) {
-            sidetoggle1.retract();
+            fork1.retract();
         }
 
         if (RIGHT_NEW_PRESS) {
-            sidetoggle2.extend();
+            fork2.extend();
             togglestart2 = timer;
         }
 
         if (timer - togglestart2 > 50) {
-            sidetoggle2.retract();
+            fork2.retract();
         }
 
         //Claw

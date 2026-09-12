@@ -37,8 +37,8 @@ using namespace pros;
 
 // #define pistonport 'A'
 #define clawport {3, 'H'}
-#define sidetoggle1port 'A'
-#define sidetoggle2port 'B'
+#define fork1port 'A'
+#define fork2port 'B'
 
 // AutonSelector -----------------------------------------------------------------------------
 
@@ -74,8 +74,8 @@ inline Motor armmotor(armmotorport, MotorGears::green); //stc
 // Pneumatics Definitions --------------------------------------------------------------------
 
 inline pros::adi::Pneumatics claw(clawport, false);
-inline pros::adi::Pneumatics sidetoggle1(sidetoggle1port, false);
-inline pros::adi::Pneumatics sidetoggle2(sidetoggle2port, false);
+inline pros::adi::Pneumatics fork1(fork1port, false);
+inline pros::adi::Pneumatics fork2(fork2port, false);
 
 // Sensor Definitions ------------------------------------------------------------------------
 

@@ -28,9 +28,12 @@ void initialize()
     lift.set_brake_mode_all(hold);
     armmotor.set_brake_mode_all(hold);
 
+    fork1.set_value(true);
+    fork2.set_value(true);
+
     claw.set_value(true);
 
-    pros::Task movement(movementFn, nullptr, "Lift");
+    // pros::Task movement(movementFn, nullptr, "Lift");
     chassis.setPose(-55, -8, 270); //starting on the left
 }
 
@@ -108,9 +111,43 @@ void opcontrol()
             intake.move(0);
         }
 
+        //Lift
+        if (R2_HELD) {
+            lift.move(-127);
+        } else if (R1_HELD) {
+            lift.move(127);
+        } else {
+            lift.move(0);
+        }
+
+        //Claw
+        if (DOWN_NEW_PRESS) {
+            claw.set_value(true);
+        } else if (B_NEW_PRESS) {
+            claw.set_value(false);
+        }
+
+        // Arm
+        if (X_HELD) {
+            armmotor.move(-127);
+        } else if (A_HELD) {
+            armmotor.move(127);
+        } else {
+            armmotor.move(0);
+        }
+
+        // Forks
+        if (Y_NEW_PRESS) {
+            fork1.toggle();
+        }
+        if (RIGHT_NEW_PRESS) {
+            fork2.toggle();
+        }
+
+
         pros::delay(10);
 
-        master.print(0,1,"%.2f/%.2f/%.1f", chassis.getPose().x, chassis.getPose().y, chassis.getPose().theta);
+        // master.print(0,1,"%.2f/%.2f/%.1f", chassis.getPose().x, chassis.getPose().y, chassis.getPose().theta);
 
         // if (LEFT_NEW_PRESS) {
 

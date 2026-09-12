@@ -219,7 +219,7 @@ void leftAuton() {
     rightdrive.move(100);
     pros::delay(500);
     rightdrive.move(-127);
-    pros::delay(300);
+    pros::delay(600);
     rightdrive.move(0);
 
     // move to back to goal + score the 1st pin
@@ -241,7 +241,7 @@ void leftAuton() {
     chassis.turnToHeading(0, 500, {.maxSpeed = 80});
     chassis.moveToPoint(-20, -20, 1500, {.forwards = false, .maxSpeed = 80});
     claw.extend();
-    liftPIDtarget(14.5);
+    liftPIDtarget(15.5);
     pros::delay(500);
 
     //score 2nd pin
@@ -251,6 +251,8 @@ void leftAuton() {
     chassis.tank(-50, -50);
     delay(500);
     chassis.tank(0,0);
+    liftPIDtarget(14);
+    pros::delay(200);
     claw.retract();
 
     // go to 3rd pin
@@ -260,15 +262,17 @@ void leftAuton() {
     chassis.turnToPoint(-46, -46, 500, {.forwards = false, .maxSpeed = 100});
     chassis.moveToPoint(-43.5, -41.5, 1000, {.forwards = false, .maxSpeed = 60}, false);
     claw.extend();
-    liftPIDtarget(21.5);
+    liftPIDtarget(22.5);
 
     // score 3rd pin
-    delay(500);
+    pros::delay(500);
     chassis.moveToPoint(-46, 46, 1000, {.forwards = false, .maxSpeed = 60});
     chassis.turnToHeading(180, 500, {.maxSpeed = 80});
     chassis.moveToPoint(-52.5, -25, 1000, {.forwards = false, .maxSpeed = 80});
+    liftPIDtarget(21);
+    pros::delay(200);
     claw.retract();
-    delay(500);
+    pros::delay(500);
     chassis.tank(0,0);
 }
 
